@@ -1,0 +1,243 @@
+/**
+ * Admin styles for the Mastery Box plugin
+ */
+
+/* Dashboard Styles */
+.mastery-box-dashboard {
+    margin-top: 20px;
+}
+
+.mastery-box-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.mastery-box-stat-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.mastery-box-stat-card .stat-icon {
+    font-size: 2.5em;
+    margin-right: 15px;
+}
+
+.mastery-box-stat-card .stat-content h3 {
+    margin: 0;
+    font-size: 2em;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.mastery-box-stat-card .stat-content p {
+    margin: 5px 0 0;
+    color: #646970;
+    font-size: 0.9em;
+}
+
+.mastery-box-dashboard-section {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.mastery-box-dashboard-section h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #c3c4c7;
+}
+
+.mastery-box-quick-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.mastery-box-shortcodes .shortcode-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f6f7f7;
+    border-left: 4px solid #2271b1;
+}
+
+.mastery-box-shortcodes .shortcode-item code {
+    background: #2271b1;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+/* Gift Quality Badges */
+.gift-quality {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.gift-quality-bronze {
+    background: #cd7f32;
+}
+
+.gift-quality-silver {
+    background: #c0c0c0;
+    color: #333;
+}
+
+.gift-quality-gold {
+    background: #ffd700;
+    color: #333;
+}
+
+.gift-quality-platinum {
+    background: #e5e4e2;
+    color: #333;
+}
+
+/* Gifts Page */
+.mastery-box-gifts-page {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.mastery-box-gifts-form,
+.mastery-box-gifts-list {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.mastery-box-gifts-form h2,
+.mastery-box-gifts-list h2 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #c3c4c7;
+}
+
+/* Entries Page */
+.mastery-box-entries-page {
+    margin-top: 20px;
+}
+
+.mastery-box-winner {
+    background: #00a32a;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+.mastery-box-loser {
+    background: #d63638;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+.mastery-box-no-entries {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    padding: 40px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.mastery-box-no-entries h2 {
+    color: #646970;
+    margin-bottom: 20px;
+}
+
+.mastery-box-no-entries ul {
+    text-align: left;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.mastery-box-no-entries code {
+    background: #f6f7f7;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+/* Settings Page */
+.mastery-box-settings-sections {
+    margin-top: 20px;
+}
+
+.mastery-box-settings-section {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.mastery-box-settings-section h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #c3c4c7;
+}
+
+.mastery-box-usage-instructions {
+    line-height: 1.6;
+}
+
+.shortcode-example {
+    background: #f6f7f7;
+    border-left: 4px solid #2271b1;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.shortcode-example h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.shortcode-example code {
+    background: #2271b1;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 782px) {
+    .mastery-box-gifts-page {
+        grid-template-columns: 1fr;
+    }
+
+    .mastery-box-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mastery-box-quick-actions {
+        flex-direction: column;
+    }
+
+    .mastery-box-quick-actions .button {
+        text-align: center;
+    }
+}

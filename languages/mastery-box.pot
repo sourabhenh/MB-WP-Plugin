@@ -1,0 +1,44 @@
+# Copyright (C) 2024 Mastery Box
+# This file is distributed under the same license as the Mastery Box package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Mastery Box 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/mastery-box\n"
+"POT-Creation-Date: 2024-08-01 12:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: admin/class-mastery-box-admin.php:67
+msgid "Mastery Box"
+msgstr ""
+
+#: admin/class-mastery-box-admin.php:78
+msgid "Dashboard"
+msgstr ""
+
+#: admin/class-mastery-box-admin.php:88
+msgid "Gifts"
+msgstr ""
+
+#: admin/class-mastery-box-admin.php:98
+msgid "Entries"
+msgstr ""
+
+#: admin/class-mastery-box-admin.php:108
+msgid "Settings"
+msgstr ""
+
+#: public/class-mastery-box-public.php:234
+msgid "Start Playing!"
+msgstr ""
+
+#: public/class-mastery-box-public.php:252
+msgid "Choose Your Box!"
+msgstr ""
+
+#: public/class-mastery-box-public.php:253
+msgid "Click on a box to see what you've won!"
+msgstr ""
