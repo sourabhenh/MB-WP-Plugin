@@ -61,7 +61,7 @@ function mastery_box_handle_settings_save() {
     // Save Terms & Conditions label (HTML allowed)
     update_option( 'mastery_box_terms_label', wp_kses_post( stripslashes( $_POST['terms_label'] ?? '' ) ) );
 
-    // NEW: Save box images
+    // Save box images
     update_option( 'mastery_box_default_box_image', esc_url_raw( $_POST['default_box_image'] ?? '' ) );
     
     $box_images = array();
