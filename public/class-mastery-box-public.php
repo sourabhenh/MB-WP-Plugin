@@ -102,8 +102,8 @@ class Mastery_Box_Public {
                     if (count($field_parts) >= 3) {
                         $field_name     = $field_parts[0];
                         $field_label    = $field_parts[1];
-                        $field_type     = $field_parts;
-                        $field_required = isset($field_parts) && $field_parts === 'required';
+                        $field_type     = $field_parts[2];
+                        $field_required = isset($field_parts[3]) && $field_parts[3] === 'required';
 
                         echo '<div class="mastery-box-field">';
 
@@ -242,8 +242,8 @@ class Mastery_Box_Public {
                     if (count($field_parts) >= 3) {
                         $field_name     = $field_parts[0];
                         $field_label    = $field_parts[1];
-                        $field_type     = $field_parts;
-                        $field_required = isset($field_parts) && $field_parts === 'required';
+                        $field_type     = $field_parts[2];
+                        $field_required = isset($field_parts[3]) && $field_parts[3] === 'required';
 
                         if ($field_type === 'file') {
                             if (isset($_FILES[$field_name]) && $_FILES[$field_name]['error'] === 0) {
