@@ -52,6 +52,7 @@ class Mastery_Box_Public {
             'number_of_boxes' => get_option('mastery_box_number_of_boxes', 3),
             'win_message'     => get_option('mastery_box_win_message', __('Congratulations! You won!', 'mastery-box')),
             'lose_message'    => get_option('mastery_box_lose_message', __('Better luck next time!', 'mastery-box')),
+			
             'form_page_url'   => $form_page_url
         ));
     }
@@ -203,29 +204,61 @@ class Mastery_Box_Public {
         echo '</div></div>';
     }
 
-    public function display_result_shortcode() {
-        if (!session_id()) { session_start(); }
-        $result = isset($_SESSION['mastery_box_last_result']) ? $_SESSION['mastery_box_last_result'] : null;
-
-        ob_start();
-        echo '<div class="mastery-box-result-page">';
-        if ($result) {
-            if (!empty($result['is_winner'])) {
-                echo '<h2>' . __('🎉 Congratulations! You won!', 'mastery-box') . '</h2>';
-                echo '<p>' . esc_html($result['message']) . '</p>';
-                if (!empty($result['gift_name'])) {
-                    echo '<p><strong>' . __('Prize:', 'mastery-box') . '</strong> ' . esc_html($result['gift_name']) . '</p>';
-                }
-            } else {
-                echo '<h2>' . __('Better luck next time!', 'mastery-box') . '</h2>';
-                echo '<p>' . esc_html($result['message']) . '</p>';
-            }
-        } else {
-            echo '<p>' . __('No game result found. Please play the game first.', 'mastery-box') . '</p>';
-        }
-        echo '</div>';
-        return ob_get_clean();
+  
+	
+public function display_result_shortcode() {
+    if (!session_id()) { 
+        session_start(); 
     }
+
+    $result = isset($_SESSION['mastery_box_last_result']) ? $_SESSION['mastery_box_last_result'] : null;
+
+    $win_message = get_option('mastery_box_win_message', 'Congratulations! You won!');
+    $lose_message = get_option('mastery_box_lose_message', 'Better luck next time!');
+
+    ob_start();
+    echo '<div class="mastery-box-result-page">';
+
+    if ($result) {
+        if (!empty($result['is_winner'])) {
+            echo '<h2>' . esc_html($win_message) . '</h2>';
+
+            if (!empty($result['gift_image'])) {
+                echo '<div class="gift-image">
+                        <img src="' . esc_url($result['gift_image']) . '" alt="' . esc_attr($result['gift_name'] ?? 'Gift') . '">
+                      </div>';
+            }
+
+            echo '<div class="prizebox">';
+
+            if (!empty($result['gift_name'])) {
+                echo '<p class="prizename">' . esc_html($result['gift_name']) . '</p>';
+            }
+            if (!empty($result['message'])) {
+                echo '<p class="prizemessage">' . esc_html($result['message']) . '</p>';
+            }
+
+            echo '</div>';
+
+        } else {
+            echo '<h3>' . esc_html($lose_message) . '</h3>';
+            echo '<p class="keepreceipt">' . esc_html('Keep your receipt safe,  winners will be notified by email.') . '</p>';
+			 echo '<p class="announced">' . esc_html('Result will be announced after 22 September 2025.') . '</p>';
+
+           // if (!empty($result['message'])) {
+            //    echo '<p>' . esc_html($result['message']) . '</p>';
+           // }
+        }
+    } else {
+        echo '<p class="nogameresult">' . __('No game result found. Please play the game first.', 'mastery-box') . '</p>';
+    }
+
+    echo '</div>';
+    return ob_get_clean();
+}
+
+
+
 
     public function handle_form_submission() {
         if (!wp_verify_nonce($_POST['nonce'], 'mastery_box_nonce')) {
@@ -279,50 +312,53 @@ class Mastery_Box_Public {
         ));
     }
 
-    public function handle_game_play() {
-        if (!wp_verify_nonce($_POST['nonce'], 'mastery_box_nonce')) {
-            wp_send_json_error(__('Security check failed', 'mastery-box'));
-        }
-        if (!session_id()) { session_start(); }
-        if (!empty($_SESSION['mastery_box_played'])) {
-            wp_send_json_error(__('You have already played! Please fill the form again to play.', 'mastery-box'));
-        }
-
-        $user_data  = $_SESSION['mastery_box_user_data'] ?? array();
-        $chosen_box = intval($_POST['box']);
-        $winning_gift = Mastery_Box_Database::determine_winner();
-        $is_winner    = !is_null($winning_gift);
-
-        $entry_data = array(
-            'user_data'  => json_encode($user_data),
-            'gift_won'   => $is_winner ? $winning_gift->id : null,
-            'is_winner'  => $is_winner ? 1 : 0,
-            'chosen_box' => $chosen_box,
-            'ip_address' => $this->get_client_ip(),
-            'user_agent' => sanitize_text_field($_SERVER['HTTP_USER_AGENT'])
-        );
-        Mastery_Box_Database::insert_entry($entry_data);
-
-        $_SESSION['mastery_box_played'] = true;
-
-        $response = $is_winner
-            ? array(
-                'is_winner'    => true,
-                'message'      => $winning_gift->description,
-                'gift_name'    => $winning_gift->name,
-                'gift_quality' => $winning_gift->quality
-            )
-            : array(
-                'is_winner' => false,
-                'message'   => get_option('mastery_box_lose_message', __('Better luck next time!', 'mastery-box'))
-            );
-
-        // Store the result in session for the results page
-        if (!session_id()) { session_start(); }
-        $_SESSION['mastery_box_last_result'] = $response;
-
-        wp_send_json_success($response);
+   public function handle_game_play() {
+    if (!wp_verify_nonce($_POST['nonce'], 'mastery_box_nonce')) {
+        wp_send_json_error(__('Security check failed', 'mastery-box'));
     }
+    if (!session_id()) { session_start(); }
+    if (!empty($_SESSION['mastery_box_played'])) {
+        wp_send_json_error(__('You have already played! Please fill the form again to play.', 'mastery-box'));
+    }
+
+    $user_data  = $_SESSION['mastery_box_user_data'] ?? array();
+    $chosen_box = intval($_POST['box']);
+    $winning_gift = Mastery_Box_Database::determine_winner();
+    $is_winner    = !is_null($winning_gift);
+
+    $entry_data = array(
+        'user_data'  => json_encode($user_data),
+        'gift_won'   => $is_winner ? $winning_gift->id : null,
+        'is_winner'  => $is_winner ? 1 : 0,
+        'chosen_box' => $chosen_box,
+        'ip_address' => $this->get_client_ip(),
+        'user_agent' => sanitize_text_field($_SERVER['HTTP_USER_AGENT'])
+    );
+    Mastery_Box_Database::insert_entry($entry_data);
+
+    $_SESSION['mastery_box_played'] = true;
+
+    if ($is_winner) {
+        $response = array(
+            'is_winner'    => true,
+            'message'      => $winning_gift->description,
+            'gift_name'    => $winning_gift->name,
+            'gift_quality' => $winning_gift->quality,
+            'gift_image'   => !empty($winning_gift->gift_image) ? esc_url_raw($winning_gift->gift_image) : ''
+        );
+    } else {
+        $response = array(
+            'is_winner' => false,
+            'message'   => get_option('mastery_box_lose_message', __('Better luck next time!', 'mastery-box'))
+        );
+    }
+
+    // Store the result in session for the results page
+    $_SESSION['mastery_box_last_result'] = $response;
+
+    wp_send_json_success($response);
+}
+
 
     private function get_client_ip() {
         $ip_keys = array('HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'HTTP_CLIENT_IP', 'REMOTE_ADDR');

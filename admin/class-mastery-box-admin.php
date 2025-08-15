@@ -98,20 +98,25 @@ class Mastery_Box_Admin {
         include_once plugin_dir_path(__FILE__) . 'partials/mastery-box-admin-settings.php';
     }
 
-    private function handle_gift_submission() {
-        $quantity = (!empty($_POST['gift_quantity']) && is_numeric($_POST['gift_quantity'])) ? intval($_POST['gift_quantity']) : null;
-        $data = array(
-            'name'          => sanitize_text_field($_POST['gift_name']),
-            'description'   => sanitize_textarea_field($_POST['gift_description']),
-            'quality'       => sanitize_text_field($_POST['gift_quality']),
-            'quantity'      => $quantity,
-            'win_percentage'=> floatval($_POST['win_percentage'])
-        );
+   
+	private function handle_gift_submission() {
+    $quantity = (isset($_POST['gift_quantity']) && $_POST['gift_quantity'] !== '' && is_numeric($_POST['gift_quantity'])) ? intval($_POST['gift_quantity']) : null;
 
-        $gift_id = isset($_POST['gift_id']) ? intval($_POST['gift_id']) : null;
-        Mastery_Box_Database::save_gift($data, $gift_id);
-        $message = $gift_id ? 'updated' : 'created';
-        wp_redirect(admin_url('admin.php?page=mastery-box-gifts&message=' . $message));
-        exit;
-    }
+    $data = array(
+        'name'          => sanitize_text_field($_POST['gift_name'] ?? ''),
+        'description'   => sanitize_textarea_field($_POST['gift_description'] ?? ''),
+        'quality'       => sanitize_text_field($_POST['gift_quality'] ?? ''),
+        'quantity'      => $quantity,
+        'win_percentage'=> floatval($_POST['win_percentage'] ?? 0),
+        'gift_image'    => esc_url_raw($_POST['gift_image'] ?? '')
+    );
+
+    $gift_id = isset($_POST['gift_id']) ? intval($_POST['gift_id']) : null;
+    Mastery_Box_Database::save_gift($data, $gift_id);
+    $message = $gift_id ? 'updated' : 'created';
+    wp_redirect(admin_url('admin.php?page=mastery-box-gifts&message=' . $message));
+    exit;
+}
+
+	
 }

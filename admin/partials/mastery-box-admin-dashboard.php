@@ -99,6 +99,12 @@ if (!defined('WPINC')) {
                     <code>[masterybox_game]</code>
                     <p class="description"><?php _e('Displays the game interface with gift boxes.', 'mastery-box'); ?></p>
                 </div>
+				<div class="shortcode-item">
+                    <strong><?php _e('Result Shortcode:', 'mastery-box'); ?></strong>
+                    <code>[masterybox_result]</code>
+                    <p class="description"><?php _e('Displays the resuilt interface with gift boxes.', 'mastery-box'); ?></p>
+                </div>
+				
             </div>
         </div>
     </div>

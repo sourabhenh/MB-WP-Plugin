@@ -15,6 +15,7 @@ $form_fields = get_option(
 $number_of_boxes = get_option( 'mastery_box_number_of_boxes', 3 );
 $win_message     = get_option( 'mastery_box_win_message', __( 'Congratulations! You won!', 'mastery-box' ) );
 $lose_message    = get_option( 'mastery_box_lose_message', __( 'Better luck next time!', 'mastery-box' ) );
+
 $terms_label     = get_option( 'mastery_box_terms_label', 'By clicking "Submit" I agree to the competition\'s <a href="">Terms and Conditions</a>' );
 
 // NEW: Box images options
@@ -78,6 +79,11 @@ if ( ! is_array( $box_images ) ) {
                         <th><label for="lose_message"><?php _e( 'Lose Message', 'mastery-box' ); ?></label></th>
                         <td><textarea name="lose_message" id="lose_message" rows="3" cols="50"><?php echo esc_textarea( $lose_message ); ?></textarea></td>
                     </tr>
+					
+					
+					
+							
+					
                 </tbody></table>
             </div>
 

@@ -1,164 +1,139 @@
-<?php
-/**
- * Provide a admin area view for managing gifts
- */
+<?php if (!defined('WPINC')) die; ?>
 
-// If this file is called directly, abort.
-if (!defined('WPINC')) {
-    die;
-}
-?>
 <div class="wrap">
-    <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+    <h1><?php echo esc_html__('Gifts', 'mastery-box'); ?></h1>
 
     <?php if (isset($_GET['message'])): ?>
-        <div class="notice notice-success is-dismissible">
-            <p>
-                <?php
-                switch ($_GET['message']) {
-                    case 'created':
-                        _e('Gift created successfully!', 'mastery-box');
-                        break;
-                    case 'updated':
-                        _e('Gift updated successfully!', 'mastery-box');
-                        break;
-                    case 'deleted':
-                        _e('Gift deleted successfully!', 'mastery-box');
-                        break;
-                }
-                ?>
-            </p>
-        </div>
+        <?php if ($_GET['message'] === 'created'): ?>
+            <div class="notice notice-success is-dismissible"><p><?php _e('Gift created successfully.', 'mastery-box'); ?></p></div>
+        <?php elseif ($_GET['message'] === 'updated'): ?>
+            <div class="notice notice-success is-dismissible"><p><?php _e('Gift updated successfully.', 'mastery-box'); ?></p></div>
+        <?php elseif ($_GET['message'] === 'deleted'): ?>
+            <div class="notice notice-success is-dismissible"><p><?php _e('Gift deleted.', 'mastery-box'); ?></p></div>
+        <?php endif; ?>
     <?php endif; ?>
 
-    <div class="mastery-box-gifts-page">
-        <div class="mastery-box-gifts-form">
-            <h2><?php echo $edit_gift ? __('Edit Gift', 'mastery-box') : __('Add New Gift', 'mastery-box'); ?></h2>
+    <h2><?php echo $edit_gift ? esc_html__('Edit Gift', 'mastery-box') : esc_html__('Add New Gift', 'mastery-box'); ?></h2>
 
-            <form method="post" action="">
-                <?php wp_nonce_field('mastery_box_gift_action', 'mastery_box_nonce'); ?>
-                <?php if ($edit_gift): ?>
-                    <input type="hidden" name="gift_id" value="<?php echo esc_attr($edit_gift->id); ?>">
-                <?php endif; ?>
+    <form method="post" action="" style="max-width: 900px;">
+        <?php wp_nonce_field('mastery_box_gift_action', 'mastery_box_nonce'); ?>
+        <input type="hidden" name="submit_gift" value="1">
+        <?php if (!empty($edit_gift->id)): ?>
+            <input type="hidden" name="gift_id" value="<?php echo esc_attr($edit_gift->id); ?>">
+        <?php endif; ?>
 
-                <table class="form-table">
-                    <tbody>
-                        <tr>
-                            <th scope="row"><label for="gift_name"><?php _e('Gift Name', 'mastery-box'); ?></label></th>
-                            <td>
-                                <input type="text" name="gift_name" id="gift_name" class="regular-text"
-                                       value="<?php echo $edit_gift ? esc_attr($edit_gift->name) : ''; ?>" required>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><label for="gift_description"><?php _e('Description', 'mastery-box'); ?></label></th>
-                            <td>
-                                <textarea name="gift_description" id="gift_description" rows="4" cols="50"><?php 
-                                    echo $edit_gift ? esc_textarea($edit_gift->description) : ''; 
-                                ?></textarea>
-                                <p class="description"><?php _e('This message will be shown to users when they win this gift.', 'mastery-box'); ?></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><label for="gift_quality"><?php _e('Quality/Tier', 'mastery-box'); ?></label></th>
-                            <td>
-                                <select name="gift_quality" id="gift_quality">
-                                    <option value="bronze" <?php selected($edit_gift ? $edit_gift->quality : '', 'bronze'); ?>><?php _e('Bronze', 'mastery-box'); ?></option>
-                                    <option value="silver" <?php selected($edit_gift ? $edit_gift->quality : '', 'silver'); ?>><?php _e('Silver', 'mastery-box'); ?></option>
-                                    <option value="gold" <?php selected($edit_gift ? $edit_gift->quality : '', 'gold'); ?>><?php _e('Gold', 'mastery-box'); ?></option>
-                                    <option value="platinum" <?php selected($edit_gift ? $edit_gift->quality : '', 'platinum'); ?>><?php _e('Platinum', 'mastery-box'); ?></option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><label for="gift_quantity"><?php _e('Quantity', 'mastery-box'); ?></label></th>
-                            <td>
-                                <input type="number" name="gift_quantity" id="gift_quantity" min="0"
-                                       value="<?php echo $edit_gift && isset($edit_gift->quantity) ? esc_attr($edit_gift->quantity) : ''; ?>">
-                                <p class="description"><?php _e('Leave blank for unlimited. Otherwise, prizes are limited to this quantity.', 'mastery-box'); ?></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><label for="win_percentage"><?php _e('Win Percentage', 'mastery-box'); ?></label></th>
-                            <td>
-                                <input type="number" name="win_percentage" id="win_percentage"
-                                       min="0" max="100" step="0.01"
-                                       value="<?php echo $edit_gift ? esc_attr($edit_gift->win_percentage) : '10'; ?>">
-                                <span>%</span>
-                                <p class="description"><?php _e('Probability that users will win this gift (0-100%).', 'mastery-box'); ?></p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <table class="form-table"><tbody>
+            <tr>
+                <th><label for="gift_name"><?php _e('Gift Name', 'mastery-box'); ?></label></th>
+                <td>
+                    <input type="text" name="gift_name" id="gift_name" class="regular-text" value="<?php echo isset($edit_gift->name) ? esc_attr($edit_gift->name) : ''; ?>" required>
+                </td>
+            </tr>
+            <tr>
+                <th><label for="gift_description"><?php _e('Description', 'mastery-box'); ?></label></th>
+                <td>
+                    <textarea name="gift_description" id="gift_description" class="large-text" rows="3"><?php echo isset($edit_gift->description) ? esc_textarea($edit_gift->description) : ''; ?></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th><label for="gift_quality"><?php _e('Quality', 'mastery-box'); ?></label></th>
+                <td>
+                    <input type="text" name="gift_quality" id="gift_quality" class="regular-text" value="<?php echo isset($edit_gift->quality) ? esc_attr($edit_gift->quality) : ''; ?>">
+                </td>
+            </tr>
+            <tr>
+                <th><label for="gift_quantity"><?php _e('Quantity (leave empty for unlimited)', 'mastery-box'); ?></label></th>
+                <td>
+                    <input type="number" name="gift_quantity" id="gift_quantity" class="small-text" min="0" value="<?php echo isset($edit_gift->quantity) && $edit_gift->quantity !== null ? intval($edit_gift->quantity) : ''; ?>">
+                </td>
+            </tr>
+            <tr>
+                <th><label for="win_percentage"><?php _e('Win Percentage', 'mastery-box'); ?></label></th>
+                <td>
+                    <input type="number" step="0.01" min="0" max="100" name="win_percentage" id="win_percentage" class="small-text" value="<?php echo isset($edit_gift->win_percentage) ? esc_attr($edit_gift->win_percentage) : '0'; ?>"> %
+                </td>
+            </tr>
+            <tr>
+                <th><label for="gift_image"><?php _e('Gift Image', 'mastery-box'); ?></label></th>
+                <td>
+                    <?php
+                    $gift_image = isset($edit_gift->gift_image) ? esc_url($edit_gift->gift_image) : '';
+                    ?>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <input type="text" name="gift_image" id="gift_image" class="regular-text" value="<?php echo $gift_image; ?>" placeholder="<?php esc_attr_e('Image URL', 'mastery-box'); ?>">
+                        <button type="button" class="button mastery-box-upload" data-target="gift_image"><?php _e('Upload/Select', 'mastery-box'); ?></button>
+                        <?php if ($gift_image): ?>
+                            <img src="<?php echo $gift_image; ?>" alt="" style="max-width:60px;height:auto;border:1px solid #ddd;padding:2px;background:#fff;">
+                        <?php endif; ?>
+                    </div>
+                </td>
+            </tr>
+        </tbody></table>
 
-                <?php submit_button($edit_gift ? __('Update Gift', 'mastery-box') : __('Add Gift', 'mastery-box'), 'primary', 'submit_gift'); ?>
+        <?php submit_button($edit_gift ? __('Update Gift', 'mastery-box') : __('Add Gift', 'mastery-box')); ?>
+    </form>
 
-                <?php if ($edit_gift): ?>
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=mastery-box-gifts')); ?>" class="button button-secondary">
-                        <?php _e('Cancel', 'mastery-box'); ?>
-                    </a>
-                <?php endif; ?>
-            </form>
-        </div>
+    <hr>
 
-        <div class="mastery-box-gifts-list">
-            <h2><?php _e('Existing Gifts', 'mastery-box'); ?></h2>
-
-            <?php if (!empty($gifts)): ?>
-                <table class="wp-list-table widefat fixed striped">
-                    <thead>
-                        <tr>
-                            <th><?php _e('Name', 'mastery-box'); ?></th>
-                            <th><?php _e('Quality', 'mastery-box'); ?></th>
-                            <th><?php _e('Quantity', 'mastery-box'); ?></th>
-                            <th><?php _e('Win %', 'mastery-box'); ?></th>
-                            <th><?php _e('Created', 'mastery-box'); ?></th>
-                            <th><?php _e('Actions', 'mastery-box'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($gifts as $gift): ?>
-                            <tr>
-                                <td>
-                                    <strong><?php echo esc_html($gift->name); ?></strong>
-                                    <?php if (!empty($gift->description)): ?>
-                                        <div class="row-actions">
-                                            <small><?php echo esc_html(wp_trim_words($gift->description, 10)); ?></small>
-                                        </div>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <span class="gift-quality gift-quality-<?php echo esc_attr($gift->quality); ?>">
-                                        <?php echo esc_html(ucfirst($gift->quality)); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <?php
-                                    if (!isset($gift->quantity) || $gift->quantity === null || $gift->quantity === '') {
-                                        _e('Unlimited', 'mastery-box');
-                                    } else {
-                                        echo esc_html($gift->quantity);
-                                    }
-                                    ?>
-                                </td>
-                                <td><?php echo esc_html($gift->win_percentage); ?>%</td>
-                                <td><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($gift->created_at))); ?></td>
-                                <td>
-                                    <a href="<?php echo esc_url(admin_url('admin.php?page=mastery-box-gifts&edit=' . $gift->id)); ?>" 
-                                       class="button button-small"><?php _e('Edit', 'mastery-box'); ?></a>
-                                    <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=mastery-box-gifts&action=delete&id=' . $gift->id), 'delete_gift_' . $gift->id)); ?>" 
-                                       class="button button-small button-link-delete" 
-                                       onclick="return confirm('<?php _e('Are you sure you want to delete this gift?', 'mastery-box'); ?>')">
-                                        <?php _e('Delete', 'mastery-box'); ?>
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php else: ?>
-                <p><?php _e('No gifts found. Add your first gift above.', 'mastery-box'); ?></p>
-            <?php endif; ?>
-        </div>
-    </div>
+    <h2><?php _e('All Gifts', 'mastery-box'); ?></h2>
+    <?php if (!empty($gifts)): ?>
+        <table class="wp-list-table widefat fixed striped">
+            <thead>
+                <tr>
+                    <th><?php _e('ID', 'mastery-box'); ?></th>
+                    <th><?php _e('Image', 'mastery-box'); ?></th>
+                    <th><?php _e('Name', 'mastery-box'); ?></th>
+                    <th><?php _e('Quality', 'mastery-box'); ?></th>
+                    <th><?php _e('Win %', 'mastery-box'); ?></th>
+                    <th><?php _e('Quantity', 'mastery-box'); ?></th>
+                    <th><?php _e('Actions', 'mastery-box'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($gifts as $gift): ?>
+                    <tr>
+                        <td><?php echo esc_html($gift->id); ?></td>
+                        <td>
+                            <?php if (!empty($gift->gift_image)): ?>
+                                <img src="<?php echo esc_url($gift->gift_image); ?>" style="width:48px;height:48px;object-fit:cover;border:1px solid #ccc;">
+                            <?php endif; ?>
+                        </td>
+                        <td><?php echo esc_html($gift->name); ?></td>
+                        <td><?php echo esc_html($gift->quality); ?></td>
+                        <td><?php echo esc_html($gift->win_percentage); ?></td>
+                        <td><?php echo $gift->quantity === null ? __('Unlimited', 'mastery-box') : intval($gift->quantity); ?></td>
+                        <td>
+                            <a class="button button-small" href="<?php echo esc_url(admin_url('admin.php?page=mastery-box-gifts&edit=' . intval($gift->id))); ?>"><?php _e('Edit', 'mastery-box'); ?></a>
+                            <a class="button button-small button-link-delete" href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=mastery-box-gifts&action=delete&id=' . intval($gift->id)), 'delete_gift_' . intval($gift->id))); ?>" onclick="return confirm('<?php echo esc_js(__('Are you sure you want to delete this gift?', 'mastery-box')); ?>');"><?php _e('Delete', 'mastery-box'); ?></a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <p><?php _e('No gifts found.', 'mastery-box'); ?></p>
+    <?php endif; ?>
 </div>
+
+<script>
+jQuery(function($){
+    function openMedia(targetInputId){
+        var frame = wp.media({
+            title: 'Select or Upload Image',
+            button: { text: 'Use this image' },
+            library: { type: 'image' },
+            multiple: false
+        });
+        frame.on('select', function(){
+            var attachment = frame.state().get('selection').first().toJSON();
+            $('#' + targetInputId).val(attachment.url).trigger('change');
+        });
+        frame.open();
+    }
+    $(document).on('click', '.mastery-box-upload', function(e){
+        e.preventDefault();
+        var target = $(this).data('target');
+        if (target) openMedia(target);
+    });
+});
+</script>

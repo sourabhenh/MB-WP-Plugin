@@ -110,22 +110,23 @@
         });
     }
 
-    function handleGameResult(result, $clickedBox) {
-        if (result.is_winner) {
-            $clickedBox.find('.box-content').html(
-                '<div class="winner-content">🎉 <strong>' +
-                escapeHtml(result.gift_name || 'Winner!') + '</strong></div>'
-            );
-            $clickedBox.addClass('winner-animation');
-        } else {
-            $clickedBox.find('.box-content').html(
-                '<div class="loser-content">😔 <strong>Try Again</strong></div>'
-            );
-        }
-        setTimeout(function() {
-            redirectToResultPage();
-        }, 1200);
+  function handleGameResult(result, $clickedBox) {
+    if (result.is_winner) {
+        $clickedBox.find('.box-content').html(
+            `<div class="winner-content"><strong>` +
+                (result.gift_image ? `<img src="${escapeHtml(result.gift_image)}" alt="Gift Image" />` : 'Winner!') +
+            `</strong></div>`
+        );
+        $clickedBox.addClass('winner-animation');
+    } else {
+        $clickedBox.find('.box-content').html(
+            '<div class="loser-content">😔 <strong>Try Again</strong></div>'
+        );
     }
+    setTimeout(function() {
+        redirectToResultPage();
+    }, 1200);
+}
 
     function redirectToResultPage() {
         var resultPageUrl = '/game-result/';
