@@ -56,16 +56,17 @@
             <tr>
                 <th><label for="gift_image"><?php _e('Gift Image', 'mastery-box'); ?></label></th>
                 <td>
-                    <?php
-                    $gift_image = isset($edit_gift->gift_image) ? esc_url($edit_gift->gift_image) : '';
-                    ?>
-                    <div style="display:flex;align-items:center;gap:10px;">
+                    <?php $gift_image = isset($edit_gift->gift_image) ? esc_url($edit_gift->gift_image) : ''; ?>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
                         <input type="text" name="gift_image" id="gift_image" class="regular-text" value="<?php echo $gift_image; ?>" placeholder="<?php esc_attr_e('Image URL', 'mastery-box'); ?>">
                         <button type="button" class="button mastery-box-upload" data-target="gift_image"><?php _e('Upload/Select', 'mastery-box'); ?></button>
-                        <?php if ($gift_image): ?>
-                            <img src="<?php echo $gift_image; ?>" alt="" style="max-width:60px;height:auto;border:1px solid #ddd;padding:2px;background:#fff;">
-                        <?php endif; ?>
                     </div>
+                    <?php if ($gift_image): ?>
+                        <div style="margin-top:8px;">
+                            <img src="<?php echo $gift_image; ?>" alt="" style="max-width:150px;height:auto;border:1px solid #ddd;padding:2px;background:#fff;">
+                        </div>
+                    <?php endif; ?>
+                    <p class="description"><?php _e('Upload an image for this gift that will be shown on the results page when won.', 'mastery-box'); ?></p>
                 </td>
             </tr>
         </tbody></table>
@@ -96,11 +97,13 @@
                         <td>
                             <?php if (!empty($gift->gift_image)): ?>
                                 <img src="<?php echo esc_url($gift->gift_image); ?>" style="width:48px;height:48px;object-fit:cover;border:1px solid #ccc;">
+                            <?php else: ?>
+                                <span style="color:#666;">No image</span>
                             <?php endif; ?>
                         </td>
                         <td><?php echo esc_html($gift->name); ?></td>
                         <td><?php echo esc_html($gift->quality); ?></td>
-                        <td><?php echo esc_html($gift->win_percentage); ?></td>
+                        <td><?php echo esc_html($gift->win_percentage); ?>%</td>
                         <td><?php echo $gift->quantity === null ? __('Unlimited', 'mastery-box') : intval($gift->quantity); ?></td>
                         <td>
                             <a class="button button-small" href="<?php echo esc_url(admin_url('admin.php?page=mastery-box-gifts&edit=' . intval($gift->id))); ?>"><?php _e('Edit', 'mastery-box'); ?></a>
@@ -117,23 +120,34 @@
 
 <script>
 jQuery(function($){
-    function openMedia(targetInputId){
+    function openMedia(targetInputId) {
         var frame = wp.media({
             title: 'Select or Upload Image',
             button: { text: 'Use this image' },
             library: { type: 'image' },
             multiple: false
         });
-        frame.on('select', function(){
+        
+        frame.on('select', function() {
             var attachment = frame.state().get('selection').first().toJSON();
-            $('#' + targetInputId).val(attachment.url).trigger('change');
+            var $input = $('#' + targetInputId);
+            $input.val(attachment.url).trigger('change');
+            
+            // Reload page to show preview
+            setTimeout(function() {
+                location.reload();
+            }, 500);
         });
+        
         frame.open();
     }
-    $(document).on('click', '.mastery-box-upload', function(e){
+    
+    $(document).on('click', '.mastery-box-upload', function(e) {
         e.preventDefault();
         var target = $(this).data('target');
-        if (target) openMedia(target);
+        if (target) {
+            openMedia(target);
+        }
     });
 });
 </script>
