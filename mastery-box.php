@@ -4,7 +4,7 @@
  * Plugin URI: https://your-website.com
  * Description: An interactive WordPress plugin game where users fill out a form, proceed to a game page with gift boxes, pick one, and instantly see if they've won.
  * Version: 1.0.0
- * Author: Your Name
+ * Author: Sourabh Usta
  * License: GPL v2 or later
  * Text Domain: mastery-box
  * Domain Path: /languages
